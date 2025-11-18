@@ -18,6 +18,10 @@ fn main() {
             for (name, _) in features.iter_names() {
                 println!("{name}");
             }
+            println!("Addresses: ");
+            for addr in resolved_service.addresses {
+                println!("{addr}");
+            }
         }
     }
 }

@@ -3,9 +3,11 @@ use core::fmt;
 use crate::util::bitflag_bits;
 
 bitflag_bits! {
-    /// derived from https://emanuelecozzi.net/docs/airplay2/features, https://nto.github.io/AirPlay.html and https://openairplay.github.io/airplay-spec/features.html
+    /// derived from https://emanuelecozzi.net/docs/airplay2/features,
+    /// https://openairplay.github.io/airplay-spec/features.html and
+    /// https://nto.github.io/AirPlay.html
     #[derive(Debug, Clone, Copy)]
-    pub struct AirplayFeatures: u64
+    pub struct AirplayFeatures(u64)
     bits: {
         /// video supported
         SUPPORTS_VIDEO_V1: 0,

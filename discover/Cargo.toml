@@ -6,4 +6,4 @@ edition = "2024"
 [dependencies]
 proto.workspace = true
 
-mdns-sd = "0.17.0"
+mdns-sd.workspace = true
