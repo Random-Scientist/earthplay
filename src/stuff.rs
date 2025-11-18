@@ -1,17 +1,25 @@
 use crate::util::bitflag_bits;
 
 bitflag_bits! {
-    /// derived from https://emanuelecozzi.net/docs/airplay2/features
+    /// derived from https://emanuelecozzi.net/docs/airplay2/features and https://nto.github.io/AirPlay.html
+    ///
     #[derive(Debug, Clone, Copy)]
     pub struct AirplayFeatures: u64
     bits: {
+        /// video supported
         SUPPORTS_VIDEO_V1: 0,
         SUPPORTS_PHOTO: 1,
+        SUPPORTS_VIDEO_FAIR_PLAY: 2,
+        SUPPORTS_VIDEO_VOLUME_CONTROL: 3,
+        SUPPORTS_VIDEO_HTTP_LIVE_STREAM: 4,
         SUPPORTS_SLIDESHOW: 5,
-        FLAG6_SUPPORTS_FROM_CLOUD: 6,
+        SUPPORTS_FROM_CLOUD_0: 6,
         SUPPORTS_SCREEN: 7,
+        SUPPORTS_SCREEN_ROTATE: 8,
         SUPPORTS_AUDIO: 9,
-        AUDIO_REDUNDANT: 11,
+        SUPPORTS_AUDIO_REDUNDANT: 11,
+        SUPPORTS_FAIRPLAY_SECURE_AUTH: 12, // FPSAPv2pt5_AES_GCM
+        SUPPORTS_PHOTO_CACHING: 13,
         AUTHENTICATION_4: 14,
         METADATA_FEATURES_0: 15,
         METADATA_FEATURES_1: 16,
@@ -24,9 +32,10 @@ bitflag_bits! {
         AUTHENTICATION_8: 26,
         SUPPORTS_LEGACY_PAIRING: 27,
         HAS_UNIFIED_ADVERTISER_INFO: 30,
-        IS_CARPLAY: 32, // supportsvolume = !IS_CARPLAY
+        IS_CARPLAY: 32,
+        // supportsvolume = !IS_CARPLAY
         SUPPORTS_VIDEO_QUEUE: 33,
-        SUPPORTS_FROM_CLOUD: 34, // && FLAG6_SUPPORTS_FROM_CLOUD
+        SUPPORTS_FROM_CLOUD_1: 34, // && SUPPORTS_FROM_CLOUD_0
         SUPPORTS_TLS_PSK: 35,
         SUPPORTS_UNIFIED_MEDIA_CONTROL: 38,
         SUPPORTS_BUFFERED_AUDIO: 40,
