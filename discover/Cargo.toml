@@ -1,0 +1,9 @@
+[package]
+name = "discover"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+proto.workspace = true
+
+mdns-sd = "0.17.0"

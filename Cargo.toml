@@ -1,8 +1,6 @@
-[package]
-name = "earthplay"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+resolver = "2"
+members = ["discover", "proto"]
 
-[dependencies]
-bitflags = "2.10.0"
-mdns-sd = "0.17.0"
+[workspace.dependencies]
+proto = { path = "proto" }
