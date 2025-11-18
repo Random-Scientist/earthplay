@@ -73,8 +73,8 @@ impl fmt::Display for AirplayFeatures {
 impl AirplayFeatures {
     pub fn parse(src: &str) -> Option<Self> {
         let mut split = src.split(',');
-        let lo: u32 = split.next()?.parse().ok()?;
-        let hi: u32 = split.next()?.parse().ok()?;
-        Self::from_bits(lo as u64 & ((hi as u64) << 32))
+        let mut read = || u32::from_str_radix(split.next()?.trim_start_matches("0x"), 16).ok();
+        let (lo, hi) = (read()?, read()?);
+        Some(Self::from_bits_retain(lo as u64 | ((hi as u64) << 32)))
     }
 }
