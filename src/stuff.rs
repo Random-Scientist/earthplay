@@ -1,8 +1,9 @@
+use core::fmt;
+
 use crate::util::bitflag_bits;
 
 bitflag_bits! {
-    /// derived from https://emanuelecozzi.net/docs/airplay2/features and https://nto.github.io/AirPlay.html
-    ///
+    /// derived from https://emanuelecozzi.net/docs/airplay2/features, https://nto.github.io/AirPlay.html and https://openairplay.github.io/airplay-spec/features.html
     #[derive(Debug, Clone, Copy)]
     pub struct AirplayFeatures: u64
     bits: {
@@ -31,21 +32,21 @@ bitflag_bits! {
         AUTHENTICATION_1: 23,
         AUTHENTICATION_8: 26,
         SUPPORTS_LEGACY_PAIRING: 27,
-        HAS_UNIFIED_ADVERTISER_INFO: 30,
+        HAS_UNIFIED_ADVERTISER_INFO: 30, // aka RAOP
         IS_CARPLAY: 32,
-        // supportsvolume = !IS_CARPLAY
+        // SUPPORTS_VOLUME = !IS_CARPLAY
         SUPPORTS_VIDEO_QUEUE: 33,
         SUPPORTS_FROM_CLOUD_1: 34, // && SUPPORTS_FROM_CLOUD_0
         SUPPORTS_TLS_PSK: 35,
-        SUPPORTS_UNIFIED_MEDIA_CONTROL: 38,
+        SUPPORTS_UNIFIED_MEDIA_CONTROL: 38, // openairplay calls *this* SupportsCoreUtilsPairingAndEncryption. emanuelecozzi calls it unified_media_control.
         SUPPORTS_BUFFERED_AUDIO: 40,
         SUPPORTS_PTP: 41,
         SUPPORTS_SCREEN_MULTI_CODEC: 42,
-        SUPPORTS_SYSTEM_PAIRING: 43,
+        SUPPORTS_SYSTEM_PAIRING: 43, // implies bit 48 according to openairplay
         // tf is this
         IS_AP_VALERIA_SCREEN_SENDER: 44,
         SUPPORTS_HK_PAIRING_AND_ACCESS_CONTROL: 46,
-        SUPPORTS_CORE_UTILS_PAIRING_AND_ENCRYPTION: 48, // 38 || 46 || 43 || 48
+        SUPPORTS_CORE_UTILS_PAIRING_AND_ENCRYPTION: 48, // implied by any of 38 || 46 || 43 || 48 according to emanuelecozzi. openairplay calls this SupportsTransientPairing
         SUPPORTS_VIDEO_V2: 49,
         METADATA_FEATURES_3: 50,
         SUPPORTS_UNIFIED_PAIR_SETUP_AND_MFI: 51,
@@ -57,5 +58,23 @@ bitflag_bits! {
         SUPPORTS_AUDIO_STREAM_CONNECTION_SETUP: 59,
         SUPPORTS_AUDIO_MEDIA_DATA_CONTROL: 60,
         SUPPORTS_RFC2198_REDUNDANCY: 61,
+    }
+}
+
+impl fmt::Display for AirplayFeatures {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let lo = (self.bits() & u32::MAX as u64) as u32;
+        let hi = (self.bits() >> 32) as u32;
+        // record format for the features record of an airplay advertisment
+        f.write_fmt(format_args!("{lo:#0X},{hi:#0X}"))
+    }
+}
+
+impl AirplayFeatures {
+    pub fn parse(src: &str) -> Option<Self> {
+        let mut split = src.split(',');
+        let lo: u32 = split.next()?.parse().ok()?;
+        let hi: u32 = split.next()?.parse().ok()?;
+        Self::from_bits(lo as u64 & ((hi as u64) << 32))
     }
 }
